@@ -140,6 +140,20 @@ Examples:
 *  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
 *  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing medicalHistories.
 
+### Editing an appointment : `edit-appt` `coming out in v1.4`
+
+Edits an existing appointment in the patient's appointment list
+
+Format: `edit-appt i/NRIC id/INDEX [at/APPOINTMENTTITLE] [ad/APPOINTMENTDATE]`
+
+* Edits the appointment of the patient of specified `NRIC`
+* Edits the appointment at specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
+* At least one of the optional feilds must be provided
+* Existing values will be updated to the input values.
+
+Examples:
+* `edit-appt i/S8052802G id/2 at/covid-19 check up`
+
 ### Locating persons by name: `find`
 
 Finds persons whose names contain any of the given keywords.
@@ -197,9 +211,6 @@ If your changes to the data file makes its format invalid, AddressBook will disc
 Furthermore, certain edits can cause the AddressBook to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </div>
 
-### Archiving data files `[coming in v2.0]`
-
-_Details coming soon ..._
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -207,6 +218,17 @@ _Details coming soon ..._
 
 **Q**: How do I transfer my data to another Computer?<br>
 **A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AddressBook home folder.
+
+**Q**: What happens if I accidentally type in the wrong parameters? <br>
+**A**: Do not worry, the application will pick up invalid parameters and tell you what was the issue and will not update the patient/appointment list
+
+--------------------------------------------------------------------------------------------------------------------
+
+## Troubleshooting
+
+**Q**: The application does not start<br>
+**A**: Please check your current version of java is 17, following the requirements specified by step 1 of [QuickStart](#quick-start) <br>
+If that does not solve the issue, please redownload the latest `.jar` file (release) from [here](https://github.com/se-edu/addressbook-level3/releases) and try again.
 
 --------------------------------------------------------------------------------------------------------------------
 
