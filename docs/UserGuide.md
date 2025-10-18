@@ -30,7 +30,7 @@ This is the **perfect product** for solo doctors who take care of numerous patie
      * [**Mac OS**](https://se-education.org/guides/tutorials/javaInstallationMac.html)
      * [**Linux**](https://se-education.org/guides/tutorials/javaInstallationLinux.html)
 
-2. Download the latest `.jar` file (release) from [here](https://github.com/se-edu/addressbook-level3/releases).
+2. Download the latest `.jar` file (release) from [here](https://github.com/AY2526S1-CS2103T-W10-3/tp/releases).
 
 3. Copy the file to the folder you want to use as the _home folder_ for your DoctorBase.
 
@@ -52,9 +52,9 @@ This is the **perfect product** for solo doctors who take care of numerous patie
 
    * `list` : Lists all contacts.
 
-   * `list-appt S8052802G` : Lists all appointments of patient with nric S8052802G
+   * `list-appt i/S8052802G` : Lists all appointments of patient with nric S8052802G
 
-   * `add n/John Doe i/S8052802G g/m p/98765432 e/johnd@example.com d/12-12-2002 a/John street, block 123, #01-01` : Adds a contact named `John Doe` to the Address Book.
+   * `add n/John Doe i/S8052802G g/m p/98765432 e/johnd@example.com d/12-12-2002 a/John street, block 123, #01-01` : Adds a contact named `John Doe` to the patient list.
 
    * `add-appt i/S8052802G at/flu jab ad/29-02-2025, 0900` : Adds an appointment called `flu jab` to the patient with nric S8052802G
 
@@ -80,10 +80,10 @@ This is the **perfect product** for solo doctors who take care of numerous patie
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
 
 * Items in square brackets are optional.<br>
-  e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
+  e.g `n/NAME [mh/MEDICALHISTORY]` can be used as `n/John Doe mh/cancer` or as `n/John Doe`.
 
 * Items with `…`​ after them can be used multiple times including zero times.<br>
-  e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
+  e.g. `[mh/MEDICALHISTORY]…​` can be used as ` ` (i.e. 0 times), `mh/cancer`, `mh/cancer mh/covid` etc.
 
 * Parameters can be in any order.<br>
   e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
@@ -94,55 +94,71 @@ This is the **perfect product** for solo doctors who take care of numerous patie
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
 </div>
 
-### Viewing help : `help`
+### Adding a patient : `add`
 
-Shows a message explaining how to access the help page.
+Adds a patient to the patient list. <br>
+Useful when you take a new patient under your care
 
-![help message](images/helpMessage.png)
+Format: `add n/NAME i/NRIC g/GENDER p/PHONE_NUMBER e/EMAIL d/DATEOFBITH a/ADDRESS [mh/MEDICALHISTORY]…​`
 
-Format: `help`
+* **Tip:** A patient can have any number of medicalHistories (including 0)
 
-
-### Adding a person: `add`
-
-Adds a person to the address book.
-
-Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`
-
-<div markdown="span" class="alert alert-primary">:bulb: **Tip:**
-A person can have any number of medicalHistories (including 0)
-</div>
 
 Examples:
-* `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
-* `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
+* `add n/John Doe i/S8052802G g/m p/98765432 e/johnd@example.com d/12-12-2002 a/John street, block 123, #01-01`
+* `add n/Betsy Crowe i/T0231512Z mh/covid e/betsycrowe@example.com a/Newgate Prison p/1234567 mh/leg fracture`
 
-### Listing all persons : `list`
+### Adding an appointment : `add-appt`
 
-Shows a list of all persons in the address book.
+Adds an appointment to a patient's appointment list. <br>
+Useful when you want to record a patient's upcoming appointment
+
+Format: `add-appt i/NRIC at/APPOINTMENT TITLE ad/APPOINTMENT DATE`
+
+Examples:
+* `add-appt i/S8052802G at/flu jab ad/29-02-2025, 0900`
+* `add-appt i/T0321323S at/full body checkup ad/18-12-2025, 1000`
+
+### Listing all patients : `list`
+
+Shows a list of all patients in the patient list. <br>
+Useful when you want to view all the patients currently under your care
 
 Format: `list`
 
-### Editing a person : `edit`
+### Listing all appointments of patient : `list-appt`
 
-Edits an existing person in the address book.
+Shows a list of all appointments a patient. <br>
+Useful when you want to check the upcoming appointments of a patient
 
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
+Format: `list-appt i/NRIC`
 
-* Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
+* Shows a list of all appointments a patient with the specified `NRIC`
+
+Examples:
+* `list-appt i/S8052802G`
+* `list-appt i/T0231512Z`
+
+### Editing a patient : `edit`
+
+Edits an existing patient in the patient list.
+
+Format: `edit INDEX [n/NAME] i/[NRIC] g/[GENDER] [p/PHONE] [e/EMAIL] d/[DATEOFBIRTH] [a/ADDRESS] [mh/MEDICALHISTORY]…​`
+
+* Edits the patient at the specified `INDEX`. The index refers to the index number shown in the displayed patient list. The index **must be a positive integer** 1, 2, 3, …​
 * At least one of the optional fields must be provided.
 * Existing values will be updated to the input values.
-* When editing medicalHistories, the existing medicalHistories of the person will be removed i.e adding of medicalHistories is not cumulative.
-* You can remove all the person’s medicalHistories by typing `t/` without
+* When editing medicalHistories, the existing medicalHistories of the patient will be removed i.e adding of medicalHistories is not cumulative.
+* You can remove all the patient’s medicalHistories by typing `mh/` without
     specifying any medicalHistories after it.
 
 Examples:
-*  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
-*  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing medicalHistories.
+*  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st patient to be `91234567` and `johndoe@example.com` respectively.
+*  `edit 2 n/Betsy Crower mh/` Edits the name of the 2nd patient to be `Betsy Crower` and clears all existing medicalHistories.
 
-### Locating persons by name: `find`
+### Locating patients by name: `find`
 
-Finds persons whose names contain any of the given keywords.
+Finds patients whose names contain any of the given keywords.
 
 Format: `find KEYWORD [MORE_KEYWORDS]`
 
@@ -150,7 +166,7 @@ Format: `find KEYWORD [MORE_KEYWORDS]`
 * The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
 * Only the name is searched.
 * Only full words will be matched e.g. `Han` will not match `Hans`
-* Persons matching at least one keyword will be returned (i.e. `OR` search).
+* Patients matching at least one keyword will be returned (i.e. `OR` search).
   e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
 
 Examples:
@@ -158,23 +174,39 @@ Examples:
 * `find alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
 
-### Deleting a person : `delete`
+### Deleting a patient : `delete`
 
-Deletes the specified person from the address book.
+Deletes the specified patient from the patient list. <br>
+Useful when a patient is no longer going to be under your care
 
 Format: `delete INDEX`
 
-* Deletes the person at the specified `INDEX`.
-* The index refers to the index number shown in the displayed person list.
+* Deletes the patient at the specified `INDEX`.
+* The index refers to the index number shown in the displayed patient list.
 * The index **must be a positive integer** 1, 2, 3, …​
 
 Examples:
-* `list` followed by `delete 2` deletes the 2nd person in the address book.
-* `find Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
+* `list` followed by `delete 2` deletes the 2nd patient in the patient list.
+* `find Betsy` followed by `delete 1` deletes the 1st patient in the results of the `find` command.
+
+### Deleting an appointment : `delete-appt`
+
+Deletes the specified appointment from specified patient's appointment list. <br>
+Useful when a patient cancels their appointment
+
+Format: `delete-appt i/NRIC id/INDEX`
+
+* Deletes an appointment of patient with specified `NRIC`
+* The index refers the index number shown in the patient's appointment list
+* The index **must be a positive integer** 1, 2, 3, …​
+
+Examples:
+* `delete-appt i/S8052802G id/2`
+* `delete-appt i/T0213123S, id/1`
 
 ### Clearing all entries : `clear`
 
-Clears all entries from the address book.
+Clears all entries from the patient list.
 
 Format: `clear`
 
@@ -186,27 +218,24 @@ Format: `exit`
 
 ### Saving the data
 
-AddressBook data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
+DoctorBase data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
 
 ### Editing the data file
 
-AddressBook data are saved automatically as a JSON file `[JAR file location]/data/addressbook.json`. Advanced users are welcome to update data directly by editing that data file.
+DoctorBase data are saved automatically as a JSON file `[JAR file location]/data/doctorbase.json`. Advanced users are welcome to update data directly by editing that data file.
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Caution:**
-If your changes to the data file makes its format invalid, AddressBook will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
-Furthermore, certain edits can cause the AddressBook to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+If your changes to the data file makes its format invalid, DoctorBase will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
+Furthermore, certain edits can cause the DoctorBase to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </div>
 
-### Archiving data files `[coming in v2.0]`
-
-_Details coming soon ..._
 
 --------------------------------------------------------------------------------------------------------------------
 
 ## FAQ
 
 **Q**: How do I transfer my data to another Computer?<br>
-**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AddressBook home folder.
+**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous DoctorBase home folder.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -219,12 +248,15 @@ _Details coming soon ..._
 
 ## Command summary
 
-Action | Format, Examples
---------|------------------
-**Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
-**Clear** | `clear`
-**Delete** | `delete INDEX`<br> e.g., `delete 3`
-**Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
-**Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
-**List** | `list`
-**Help** | `help`
+| Action          | Format, Examples                                                                                                                                                                                                         |
+|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Add**         | `add n/NAME i/NRIC g/GENDER p/PHONE_NUMBER e/EMAIL d/DATEOFBITH a/ADDRESS [mh/MEDICALHISTORY]…​`<br> e.g., `add n/John Doe i/S8052802G g/m p/98765432 e/johnd@example.com d/12-12-2002 a/John street, block 123, #01-01` |
+| **Add-appt**    | `add-appt i/NRIC at/APPOINTMENT TITLE ad/APPOINTMENT DATE`<br> e.g., `add-appt i/S8052802G at/flu jab ad/29-02-2025, 0900`                                                                                               |
+| **Clear**       | `clear`                                                                                                                                                                                                                  |
+| **Delete**      | `delete INDEX`<br> e.g., `delete 3`                                                                                                                                                                                      |
+| **Delete-appt** | `delete-appt i/NRIC id/INDEX`<br> e.g., `delete-appt i/S8052802G id/2`                                                                                                                                                   |
+| **Edit**        | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`                                                                                              |
+| **Find**        | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`                                                                                                                                                               |
+| **List**        | `list`                                                                                                                                                                                                                   |
+| **List-appt**   | `list-appt i/NRIC`<br> e.g., `list-appt i/S8052802G`                                                                                                                                                                     |
+| **Help**        | `help`                                                                                                                                                                                                                   |
