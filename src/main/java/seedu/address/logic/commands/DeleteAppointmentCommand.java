@@ -13,10 +13,10 @@ import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.appointment.Appointment;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 
 /**
- * Adds an appointment to the person specified in the address book.
+ * Adds an appointment to the patient specified in the address book.
  */
 public class DeleteAppointmentCommand extends Command {
 
@@ -29,7 +29,7 @@ public class DeleteAppointmentCommand extends Command {
             + "Example: " + COMMAND_WORD + " " + PREFIX_NRIC + " S1234567A " + PREFIX_INDEX + " 1";
 
     public static final String MESSAGE_DELETE_APPOINTMENT_SUCCESS = "Appointment for %1$s: %2$s deleted";
-    public static final String MESSAGE_PERSON_NOT_FOUND = "No person with this NRIC exists in the address book.";
+    public static final String MESSAGE_PATIENT_NOT_FOUND = "No patient with this NRIC exists in the address book.";
     public static final String MESSAGE_APPOINTMENT_NOT_FOUND = "No apppointment for this NRIC at index %1$s "
             + "exists in the address book";
 
@@ -38,7 +38,7 @@ public class DeleteAppointmentCommand extends Command {
 
     /**
      * Creates a DeleteAppointmentCommand to delete the specified {@code Appointment}
-     * from the person with the given NRIC.
+     * from the patient with the given NRIC.
      *
      */
     public DeleteAppointmentCommand(String targetNric, Index targetIndex) {
@@ -51,19 +51,19 @@ public class DeleteAppointmentCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
-        Person targetPerson = model.findPersonByNric(targetNric);
-        if (targetPerson == null) {
-            throw new CommandException(MESSAGE_PERSON_NOT_FOUND);
+        Patient targetPatient = model.findPatientByNric(targetNric);
+        if (targetPatient == null) {
+            throw new CommandException(MESSAGE_PATIENT_NOT_FOUND);
         }
 
-        ArrayList<Appointment> targetPersonAppointments = targetPerson.getAppointments();
-        if (targetIndex.getZeroBased() >= targetPersonAppointments.size()) {
+        ArrayList<Appointment> targetPatientAppointments = targetPatient.getAppointments();
+        if (targetIndex.getZeroBased() >= targetPatientAppointments.size()) {
             throw new CommandException(String.format(MESSAGE_APPOINTMENT_NOT_FOUND, targetIndex.getOneBased()));
         }
 
-        Appointment deletedAppointment = targetPersonAppointments.remove(targetIndex.getZeroBased());
+        Appointment deletedAppointment = targetPatientAppointments.remove(targetIndex.getZeroBased());
         return new CommandResult(String.format(MESSAGE_DELETE_APPOINTMENT_SUCCESS,
-                Messages.format(targetPerson), deletedAppointment), false, true, false);
+                Messages.format(targetPatient), deletedAppointment), false, true, false);
     }
 
     @Override

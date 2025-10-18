@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.ListAppointmentCommand;
-import seedu.address.model.person.Nric;
+import seedu.address.model.patient.Nric;
 
 public class ListAppointmentCommandParserTest {
     private static final String MESSAGE_INVALID_FORMAT = String.format(

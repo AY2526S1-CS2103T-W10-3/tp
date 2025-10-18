@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import seedu.address.logic.commands.AddAppointmentCommand;
 import seedu.address.model.appointment.Appointment;
 import seedu.address.model.appointment.Title;
-import seedu.address.model.person.Nric;
+import seedu.address.model.patient.Nric;
 import seedu.address.testutil.AppointmentBuilder;
 
 public class AddAppointmentCommandParserTest {

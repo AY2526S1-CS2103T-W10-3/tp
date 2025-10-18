@@ -32,7 +32,7 @@ public class MainWindow extends UiPart<Stage> {
     private Logic logic;
 
     // Independent Ui parts residing in this Ui container
-    private PersonListPanel personListPanel;
+    private PatientListPanel patientListPanel;
     private AppointmentListPanel appointmentListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
@@ -44,7 +44,7 @@ public class MainWindow extends UiPart<Stage> {
     private MenuItem helpMenuItem;
 
     @FXML
-    private StackPane personListPanelPlaceholder;
+    private StackPane patientListPanelPlaceholder;
 
     @FXML
     private StackPane appointmentListPanelPlaceholder;
@@ -115,8 +115,8 @@ public class MainWindow extends UiPart<Stage> {
      * Fills up all the placeholders of this window.
      */
     void fillInnerParts() {
-        personListPanel = new PersonListPanel(logic.getFilteredPersonList());
-        personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
+        patientListPanel = new PatientListPanel(logic.getFilteredPatientList());
+        patientListPanelPlaceholder.getChildren().add(patientListPanel.getRoot());
 
         resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
@@ -157,10 +157,10 @@ public class MainWindow extends UiPart<Stage> {
     }
 
     /**
-     * Enable showing Person list and hides Appointment list
+     * Enable showing Patient list and hides Appointment list
      */
-    public void showPersonList() {
-        personListPanelPlaceholder.setVisible(true);
+    public void showPatientList() {
+        patientListPanelPlaceholder.setVisible(true);
         appointmentListPanelPlaceholder.setVisible(false);
 
         StatusBarFooter statusBarFooter = new StatusBarFooter(logic.getAddressBookFilePath());
@@ -168,10 +168,10 @@ public class MainWindow extends UiPart<Stage> {
     }
 
     /**
-     * Enable showing Appointment list and hides Person list
+     * Enable showing Appointment list and hides Patient list
      */
     public void showAppointmentList() {
-        personListPanelPlaceholder.setVisible(false);
+        patientListPanelPlaceholder.setVisible(false);
         appointmentListPanelPlaceholder.setVisible(true);
     }
 
@@ -181,11 +181,11 @@ public class MainWindow extends UiPart<Stage> {
     @FXML
     public void handleListAppointment() {
         appointmentListPanel =
-                new AppointmentListPanel(FXCollections.observableList(logic.getSelectedPerson().getAppointments()));
+                new AppointmentListPanel(FXCollections.observableList(logic.getSelectedPatient().getAppointments()));
         appointmentListPanelPlaceholder.getChildren().add(appointmentListPanel.getRoot());
 
         StatusBarFooter statusBarFooter =
-                new StatusBarFooter(logic.getAddressBookFilePath(), logic.getSelectedPerson());
+                new StatusBarFooter(logic.getAddressBookFilePath(), logic.getSelectedPatient());
         statusbarPlaceholder.getChildren().add(statusBarFooter.getRoot());
 
         showAppointmentList();
@@ -204,8 +204,8 @@ public class MainWindow extends UiPart<Stage> {
         primaryStage.hide();
     }
 
-    public PersonListPanel getPersonListPanel() {
-        return personListPanel;
+    public PatientListPanel getPatientListPanel() {
+        return patientListPanel;
     }
 
     /**
@@ -226,7 +226,7 @@ public class MainWindow extends UiPart<Stage> {
             if (commandResult.isShowAppointment()) {
                 handleListAppointment();
             } else {
-                showPersonList();
+                showPatientList();
             }
 
             if (commandResult.isExit()) {

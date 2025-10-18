@@ -6,16 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.Assert.assertThrows;
-import static seedu.address.testutil.TypicalPersons.ALICE;
-import static seedu.address.testutil.TypicalPersons.BENSON;
-import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+import static seedu.address.testutil.TypicalPatients.ALICE;
+import static seedu.address.testutil.TypicalPatients.BENSON;
+import static seedu.address.testutil.TypicalPatients.getTypicalAddressBook;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for ListAppointmentCommand.
@@ -29,33 +29,33 @@ public class ListAppointmentCommandTest {
     }
 
     @Test
-    public void execute_personExists_success() throws Exception {
+    public void execute_patientExists_success() throws Exception {
         ListAppointmentCommand command = new ListAppointmentCommand(BENSON.getNric().toString());
-        Person person = model.findPersonByNric(BENSON.getNric().toString());
+        Patient patient = model.findPatientByNric(BENSON.getNric().toString());
 
         // Benson has 1 appointment
-        String expectedMessage = String.format(ListAppointmentCommand.MESSAGE_SUCCESS, person.getName(),
-                person.getNric());
+        String expectedMessage = String.format(ListAppointmentCommand.MESSAGE_SUCCESS, patient.getName(),
+                patient.getNric());
         Model expectedModel = new ModelManager(model.getAddressBook(), model.getUserPrefs());
 
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
 
         command = new ListAppointmentCommand(ALICE.getNric().toString());
-        person = model.findPersonByNric(ALICE.getNric().toString());
+        patient = model.findPatientByNric(ALICE.getNric().toString());
 
         // Alice has no appointment
-        expectedMessage = String.format(ListAppointmentCommand.MESSAGE_SUCCESS, person.getName(),
-                person.getNric());
+        expectedMessage = String.format(ListAppointmentCommand.MESSAGE_SUCCESS, patient.getName(),
+                patient.getNric());
         expectedModel = new ModelManager(model.getAddressBook(), model.getUserPrefs());
 
         assertCommandSuccess(command, model, expectedMessage, expectedModel);
     }
 
     @Test
-    public void execute_personNotFound_throwsCommandException() {
+    public void execute_patientNotFound_throwsCommandException() {
         ListAppointmentCommand command = new ListAppointmentCommand("S1234567Z");
 
-        assertCommandFailure(command, model, ListAppointmentCommand.MESSAGE_PERSON_NOT_FOUND);
+        assertCommandFailure(command, model, ListAppointmentCommand.MESSAGE_PATIENT_NOT_FOUND);
     }
 
     @Test

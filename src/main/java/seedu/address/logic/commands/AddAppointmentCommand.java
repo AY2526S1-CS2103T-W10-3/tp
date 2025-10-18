@@ -13,10 +13,10 @@ import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.appointment.Appointment;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 
 /**
- * Adds an appointment to the person specified in the address book.
+ * Adds an appointment to the patient specified in the address book.
  */
 public class AddAppointmentCommand extends Command {
 
@@ -33,13 +33,13 @@ public class AddAppointmentCommand extends Command {
             + PREFIX_APPOINTMENT_DATETIME + "10-10-2010, 0900\n";
 
     public static final String MESSAGE_SUCCESS = "New appointment for %1$s: %2$s";
-    public static final String MESSAGE_PERSON_NOT_FOUND = "No person with this NRIC exists in the address book.";
+    public static final String MESSAGE_PATIENT_NOT_FOUND = "No patient with this NRIC exists in the address book.";
 
     private final Appointment toAdd;
     private final String targetNric;
 
     /**
-     * Creates an AddAppointmentCommand to add the specified {@code Appointment} to the person with the given NRIC.
+     * Creates an AddAppointmentCommand to add the specified {@code Appointment} to the patient with the given NRIC.
      *
      */
     public AddAppointmentCommand(String targetNric, Appointment appointment) {
@@ -53,31 +53,31 @@ public class AddAppointmentCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
-        Person targetPerson = model.findPersonByNric(targetNric);
-        if (targetPerson == null) {
-            throw new CommandException(MESSAGE_PERSON_NOT_FOUND);
+        Patient targetPatient = model.findPatientByNric(targetNric);
+        if (targetPatient == null) {
+            throw new CommandException(MESSAGE_PATIENT_NOT_FOUND);
         }
 
         ArrayList<Appointment> updatedAppointments = new ArrayList<>(
-                targetPerson.getAppointments()
+                targetPatient.getAppointments()
         );
         updatedAppointments.add(toAdd);
 
-        Person newPerson = new Person(
-                targetPerson.getName(),
-                targetPerson.getNric(),
-                targetPerson.getGender(),
-                targetPerson.getPhone(),
-                targetPerson.getEmail(),
-                targetPerson.getDob(),
-                targetPerson.getAddress(),
-                targetPerson.getTags(),
+        Patient newPatient = new Patient(
+                targetPatient.getName(),
+                targetPatient.getNric(),
+                targetPatient.getGender(),
+                targetPatient.getPhone(),
+                targetPatient.getEmail(),
+                targetPatient.getDob(),
+                targetPatient.getAddress(),
+                targetPatient.getTags(),
                 updatedAppointments
         );
 
-        model.setPerson(targetPerson, newPerson);
+        model.setPatient(targetPatient, newPatient);
         return new CommandResult(String.format(MESSAGE_SUCCESS,
-                Messages.format(newPerson), toAdd));
+                Messages.format(newPatient), toAdd));
     }
 
     @Override

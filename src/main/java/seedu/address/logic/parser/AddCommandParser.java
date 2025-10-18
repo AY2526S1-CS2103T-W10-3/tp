@@ -18,14 +18,14 @@ import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.appointment.Appointment;
 import seedu.address.model.medicalhistory.MedicalHistory;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.DateOfBirth;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Gender;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Nric;
-import seedu.address.model.person.Person;
-import seedu.address.model.person.Phone;
+import seedu.address.model.patient.Address;
+import seedu.address.model.patient.DateOfBirth;
+import seedu.address.model.patient.Email;
+import seedu.address.model.patient.Gender;
+import seedu.address.model.patient.Name;
+import seedu.address.model.patient.Nric;
+import seedu.address.model.patient.Patient;
+import seedu.address.model.patient.Phone;
 
 /**
  * Parses input arguments and creates a new AddCommand object
@@ -60,10 +60,10 @@ public class AddCommandParser implements Parser<AddCommand> {
         Set<MedicalHistory> medicalHistoryList = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
         ArrayList<Appointment> appointments = new ArrayList<>();
 
-        Person person = new Person(name, nric, gender, phone, email, dateOfBirth,
+        Patient patient = new Patient(name, nric, gender, phone, email, dateOfBirth,
                 address, medicalHistoryList, appointments);
 
-        return new AddCommand(person);
+        return new AddCommand(patient);
     }
 
     /**

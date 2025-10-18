@@ -1,0 +1,11 @@
+{
+  "patients": [ {
+    "name": "Hans Muster",
+    "nric": "A1234567Z",
+    "gender": "m",
+    "phone": "9482424",
+    "email": "invalid@email!3e",
+    "dob": "30-30-2002",
+    "address": "4th street"
+  } ]
+}

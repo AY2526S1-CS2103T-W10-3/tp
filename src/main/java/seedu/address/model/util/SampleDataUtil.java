@@ -12,23 +12,23 @@ import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.appointment.Appointment;
 import seedu.address.model.appointment.Title;
 import seedu.address.model.medicalhistory.MedicalHistory;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.DateOfBirth;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Gender;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Nric;
-import seedu.address.model.person.Person;
-import seedu.address.model.person.Phone;
+import seedu.address.model.patient.Address;
+import seedu.address.model.patient.DateOfBirth;
+import seedu.address.model.patient.Email;
+import seedu.address.model.patient.Gender;
+import seedu.address.model.patient.Name;
+import seedu.address.model.patient.Nric;
+import seedu.address.model.patient.Patient;
+import seedu.address.model.patient.Phone;
 
 /**
  * Contains utility methods for populating {@code AddressBook} with sample data.
  */
 public class SampleDataUtil {
 
-    public static Person[] getSamplePersons() {
-        return new Person[] {
-            new Person(
+    public static Patient[] getSamplePatients() {
+        return new Patient[] {
+            new Patient(
                 new Name("Alex Yeoh"),
                 new Nric("S2743251D"),
                 new Gender("m"),
@@ -52,7 +52,7 @@ public class SampleDataUtil {
                     )
                 ))
             ),
-            new Person(
+            new Patient(
                 new Name("Bernice Yu"),
                 new Nric("S7101271I"),
                 new Gender("f"),
@@ -68,7 +68,7 @@ public class SampleDataUtil {
                     )
                 ))
             ),
-            new Person(
+            new Patient(
                 new Name("Charlotte Oliveiro"),
                 new Nric("T3726790I"),
                 new Gender("f"),
@@ -84,7 +84,7 @@ public class SampleDataUtil {
                     )
                 ))
             ),
-            new Person(
+            new Patient(
                 new Name("David Li"),
                 new Nric("F0512458K"),
                 new Gender("m"),
@@ -100,7 +100,7 @@ public class SampleDataUtil {
                     )
                 ))
             ),
-            new Person(
+            new Patient(
                 new Name("Irfan Ibrahim"),
                 new Nric("G4160131R"),
                 new Gender("m"),
@@ -116,7 +116,7 @@ public class SampleDataUtil {
                     )
                 ))
             ),
-            new Person(
+            new Patient(
                 new Name("Roy Balakrishnan"),
                 new Nric("M1902102L"),
                 new Gender("m"),
@@ -137,8 +137,8 @@ public class SampleDataUtil {
 
     public static ReadOnlyAddressBook getSampleAddressBook() {
         AddressBook sampleAb = new AddressBook();
-        for (Person samplePerson : getSamplePersons()) {
-            sampleAb.addPerson(samplePerson);
+        for (Patient samplePatient : getSamplePatients()) {
+            sampleAb.addPatient(samplePatient);
         }
         return sampleAb;
     }

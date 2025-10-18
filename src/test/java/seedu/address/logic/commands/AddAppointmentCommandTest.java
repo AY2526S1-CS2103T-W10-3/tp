@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
-import static seedu.address.testutil.TypicalPersons.ALICE;
+import static seedu.address.testutil.TypicalPatients.ALICE;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.appointment.Appointment;
 import seedu.address.model.appointment.Title;
-import seedu.address.model.person.Person;
+import seedu.address.model.patient.Patient;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for AddAppointmentCommand.
@@ -39,29 +39,29 @@ public class AddAppointmentCommandTest {
     }
 
     @Test
-    public void execute_personExists_addSuccessful() throws Exception {
-        ModelStubWithPerson modelStub = new ModelStubWithPerson(ALICE);
+    public void execute_patientExists_addSuccessful() throws Exception {
+        ModelStubWithPatient modelStub = new ModelStubWithPatient(ALICE);
         Appointment appointment = new Appointment(new Title("Dental Checkup"),
                 LocalDateTime.of(2020, 02, 20, 20, 20));
 
         AddAppointmentCommand command = new AddAppointmentCommand(ALICE.getNric().toString(), appointment);
         CommandResult commandResult = command.execute(modelStub);
 
-        Person updatedPerson = modelStub.updatedPerson;
+        Patient updatedPatient = modelStub.updatedPatient;
         assertEquals(String.format(AddAppointmentCommand.MESSAGE_SUCCESS,
-                Messages.format(updatedPerson), appointment), commandResult.getFeedbackToUser());
-        assertTrue(updatedPerson.getAppointments().contains(appointment));
+                Messages.format(updatedPatient), appointment), commandResult.getFeedbackToUser());
+        assertTrue(updatedPatient.getAppointments().contains(appointment));
     }
 
     @Test
-    public void execute_personNotFound_throwsCommandException() {
+    public void execute_patientNotFound_throwsCommandException() {
         ModelStubEmpty modelStub = new ModelStubEmpty();
         Appointment appointment = new Appointment(new Title("Checkup"),
                 LocalDateTime.of(2020, 02, 20, 20, 20));
 
         AddAppointmentCommand command = new AddAppointmentCommand("S1234567Z", appointment);
         assertThrows(CommandException.class,
-                AddAppointmentCommand.MESSAGE_PERSON_NOT_FOUND, () -> command.execute(modelStub));
+                AddAppointmentCommand.MESSAGE_PATIENT_NOT_FOUND, () -> command.execute(modelStub));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class AddAppointmentCommandTest {
         }
 
         @Override
-        public void addPerson(Person person) {
+        public void addPatient(Patient patient) {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -151,72 +151,72 @@ public class AddAppointmentCommandTest {
         }
 
         @Override
-        public boolean hasPerson(Person person) {
+        public boolean hasPatient(Patient patient) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public void deletePerson(Person target) {
+        public void deletePatient(Patient target) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public void setPerson(Person target, Person editedPerson) {
+        public void setPatient(Patient target, Patient editedPatient) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public ObservableList<Person> getFilteredPersonList() {
+        public ObservableList<Patient> getFilteredPatientList() {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public void updateFilteredPersonList(Predicate<Person> predicate) {
+        public void updateFilteredPatientList(Predicate<Patient> predicate) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public Person findPersonByNric(String targetNric) {
+        public Patient findPatientByNric(String targetNric) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public Person getSelectedPerson() {
+        public Patient getSelectedPatient() {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public void setSelectedPerson(Person person) {
+        public void setSelectedPatient(Patient patient) {
             throw new AssertionError("This method should not be called.");
         }
     }
 
     /**
-     * A Model stub with a single existing person.
+     * A Model stub with a single existing patient.
      */
-    private class ModelStubWithPerson extends ModelStub {
-        private final Person person;
-        private Person updatedPerson;
+    private class ModelStubWithPatient extends ModelStub {
+        private final Patient patient;
+        private Patient updatedPatient;
 
-        ModelStubWithPerson(Person person) {
-            requireNonNull(person);
-            this.person = person;
+        ModelStubWithPatient(Patient patient) {
+            requireNonNull(patient);
+            this.patient = patient;
         }
 
         @Override
-        public Person findPersonByNric(String targetNric) {
-            if (person.getNric().toString().equalsIgnoreCase(targetNric)) {
-                return person;
+        public Patient findPatientByNric(String targetNric) {
+            if (patient.getNric().toString().equalsIgnoreCase(targetNric)) {
+                return patient;
             }
             return null;
         }
 
         @Override
-        public void setPerson(Person target, Person editedPerson) {
+        public void setPatient(Patient target, Patient editedPatient) {
             requireNonNull(target);
-            requireNonNull(editedPerson);
-            if (target.equals(person)) {
-                this.updatedPerson = editedPerson;
+            requireNonNull(editedPatient);
+            if (target.equals(patient)) {
+                this.updatedPatient = editedPatient;
             } else {
                 throw new AssertionError("Unexpected target");
             }
@@ -229,11 +229,11 @@ public class AddAppointmentCommandTest {
     }
 
     /**
-     * A Model stub that has no matching person (for failure case).
+     * A Model stub that has no matching patient (for failure case).
      */
     private class ModelStubEmpty extends ModelStub {
         @Override
-        public Person findPersonByNric(String targetNric) {
+        public Patient findPatientByNric(String targetNric) {
             return null;
         }
 

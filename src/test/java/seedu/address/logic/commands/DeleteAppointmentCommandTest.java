@@ -6,11 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.DeleteAppointmentCommand.MESSAGE_APPOINTMENT_NOT_FOUND;
-import static seedu.address.logic.commands.DeleteAppointmentCommand.MESSAGE_PERSON_NOT_FOUND;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
-import static seedu.address.testutil.TypicalPersons.ALICE;
-import static seedu.address.testutil.TypicalPersons.BENSON;
+import static seedu.address.logic.commands.DeleteAppointmentCommand.MESSAGE_PATIENT_NOT_FOUND;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PATIENT;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PATIENT;
+import static seedu.address.testutil.TypicalPatients.ALICE;
+import static seedu.address.testutil.TypicalPatients.BENSON;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -31,8 +31,8 @@ import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.appointment.Appointment;
 import seedu.address.model.appointment.Title;
-import seedu.address.model.person.Person;
-import seedu.address.testutil.PersonBuilder;
+import seedu.address.model.patient.Patient;
+import seedu.address.testutil.PatientBuilder;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for
@@ -42,61 +42,61 @@ public class DeleteAppointmentCommandTest {
 
     @Test
     public void execute_validNricValidIndex_success() throws Exception {
-        Person personWithAppointment = createPersonWithAppointment();
+        Patient patientWithAppointment = createPatientWithAppointment();
 
         DeleteAppointmentCommand deleteAppointmentCommand = new DeleteAppointmentCommand(
-                personWithAppointment.getNric().toString(),
-                INDEX_FIRST_PERSON);
+                patientWithAppointment.getNric().toString(),
+                INDEX_FIRST_PATIENT);
 
-        Appointment appointmentToDelete = personWithAppointment.getAppointments()
-                .get(INDEX_FIRST_PERSON.getZeroBased());
+        Appointment appointmentToDelete = patientWithAppointment.getAppointments()
+                .get(INDEX_FIRST_PATIENT.getZeroBased());
         String expectedMessage = String.format(DeleteAppointmentCommand.MESSAGE_DELETE_APPOINTMENT_SUCCESS,
-                Messages.format(personWithAppointment), appointmentToDelete);
+                Messages.format(patientWithAppointment), appointmentToDelete);
 
-        ModelStubWithPerson modelStub = new ModelStubWithPerson(personWithAppointment);
+        ModelStubWithPatient modelStub = new ModelStubWithPatient(patientWithAppointment);
         CommandResult commandResult = deleteAppointmentCommand.execute(modelStub);
 
-        Person updatedPerson = modelStub.person;
+        Patient updatedPatient = modelStub.patient;
         assertEquals(expectedMessage, commandResult.getFeedbackToUser());
-        assertTrue(updatedPerson.getAppointments().isEmpty());
+        assertTrue(updatedPatient.getAppointments().isEmpty());
     }
 
     @Test
     public void execute_validNricInvalidIndex_throwsCommandException() {
         DeleteAppointmentCommand deleteAppointmentCommand = new DeleteAppointmentCommand(
                 BENSON.getNric().toString(),
-                INDEX_SECOND_PERSON);
+                INDEX_SECOND_PATIENT);
 
-        ModelStubWithPerson modelStub = new ModelStubWithPerson(BENSON);
+        ModelStubWithPatient modelStub = new ModelStubWithPatient(BENSON);
         assertCommandFailure(deleteAppointmentCommand, modelStub,
-                String.format(MESSAGE_APPOINTMENT_NOT_FOUND, INDEX_SECOND_PERSON.getOneBased()));
+                String.format(MESSAGE_APPOINTMENT_NOT_FOUND, INDEX_SECOND_PATIENT.getOneBased()));
     }
 
     @Test
     public void execute_invalidNric_throwsCommandException() {
         DeleteAppointmentCommand deleteAppointmentCommand = new DeleteAppointmentCommand(
                 ALICE.getNric().toString(),
-                INDEX_FIRST_PERSON);
+                INDEX_FIRST_PATIENT);
 
-        ModelStubWithPerson modelStub = new ModelStubWithPerson(BENSON);
-        assertCommandFailure(deleteAppointmentCommand, modelStub, MESSAGE_PERSON_NOT_FOUND);
+        ModelStubWithPatient modelStub = new ModelStubWithPatient(BENSON);
+        assertCommandFailure(deleteAppointmentCommand, modelStub, MESSAGE_PATIENT_NOT_FOUND);
     }
 
     @Test
     public void equals() {
         DeleteAppointmentCommand deleteAppointmentFirstCommand = new DeleteAppointmentCommand(
-                BENSON.getNric().toString(), INDEX_FIRST_PERSON);
+                BENSON.getNric().toString(), INDEX_FIRST_PATIENT);
         DeleteAppointmentCommand deleteAppointmentSecondCommand = new DeleteAppointmentCommand(
-                BENSON.getNric().toString(), INDEX_SECOND_PERSON);
+                BENSON.getNric().toString(), INDEX_SECOND_PATIENT);
         DeleteAppointmentCommand deleteAppointmentThirdCommand = new DeleteAppointmentCommand(
-                ALICE.getNric().toString(), INDEX_FIRST_PERSON);
+                ALICE.getNric().toString(), INDEX_FIRST_PATIENT);
 
         // same object -> returns true
         assertTrue(deleteAppointmentFirstCommand.equals(deleteAppointmentFirstCommand));
 
         // same values -> returns true
         DeleteAppointmentCommand deleteAppointmentFirstCommandCopy = new DeleteAppointmentCommand(
-                BENSON.getNric().toString(), INDEX_FIRST_PERSON);
+                BENSON.getNric().toString(), INDEX_FIRST_PATIENT);
         assertTrue(deleteAppointmentFirstCommand.equals(deleteAppointmentFirstCommandCopy));
 
         // different types -> returns false
@@ -122,8 +122,8 @@ public class DeleteAppointmentCommandTest {
         assertEquals(expected, deleteAppointmentCommand.toString());
     }
 
-    private Person createPersonWithAppointment() {
-        return new PersonBuilder().withName("Benson Meier")
+    private Patient createPatientWithAppointment() {
+        return new PatientBuilder().withName("Benson Meier")
                 .withNric("S9599208J")
                 .withGender("Male")
                 .withAddress("311, Clementi Ave 2, #02-25")
@@ -174,7 +174,7 @@ public class DeleteAppointmentCommandTest {
         }
 
         @Override
-        public void addPerson(Person person) {
+        public void addPatient(Patient patient) {
             throw new AssertionError("This method should not be called.");
         }
 
@@ -189,74 +189,74 @@ public class DeleteAppointmentCommandTest {
         }
 
         @Override
-        public boolean hasPerson(Person person) {
+        public boolean hasPatient(Patient patient) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public void deletePerson(Person target) {
+        public void deletePatient(Patient target) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public void setPerson(Person target, Person editedPerson) {
+        public void setPatient(Patient target, Patient editedPatient) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public ObservableList<Person> getFilteredPersonList() {
+        public ObservableList<Patient> getFilteredPatientList() {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public void updateFilteredPersonList(Predicate<Person> predicate) {
+        public void updateFilteredPatientList(Predicate<Patient> predicate) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public Person findPersonByNric(String targetNric) {
+        public Patient findPatientByNric(String targetNric) {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public Person getSelectedPerson() {
+        public Patient getSelectedPatient() {
             throw new AssertionError("This method should not be called.");
         }
 
         @Override
-        public void setSelectedPerson(Person person) {
+        public void setSelectedPatient(Patient patient) {
             throw new AssertionError("This method should not be called.");
         }
     }
 
     /**
-     * A Model stub with a single existing person.
+     * A Model stub with a single existing patient.
      */
-    private class ModelStubWithPerson extends ModelStub {
+    private class ModelStubWithPatient extends ModelStub {
         private final AddressBook addressBook;
-        private final Person person;
+        private final Patient patient;
 
-        private final FilteredList<Person> filteredPersons;
+        private final FilteredList<Patient> filteredPatients;
 
-        ModelStubWithPerson(Person person) {
-            requireNonNull(person);
-            this.person = person;
+        ModelStubWithPatient(Patient patient) {
+            requireNonNull(patient);
+            this.patient = patient;
             this.addressBook = new AddressBook();
-            addressBook.addPerson(person);
-            this.filteredPersons = new FilteredList<>(addressBook.getPersonList());
+            addressBook.addPatient(patient);
+            this.filteredPatients = new FilteredList<>(addressBook.getPatientList());
         }
 
         @Override
-        public Person findPersonByNric(String targetNric) {
-            if (person.getNric().toString().equalsIgnoreCase(targetNric)) {
-                return person;
+        public Patient findPatientByNric(String targetNric) {
+            if (patient.getNric().toString().equalsIgnoreCase(targetNric)) {
+                return patient;
             }
             return null;
         }
 
         @Override
-        public ObservableList<Person> getFilteredPersonList() {
-            return filteredPersons;
+        public ObservableList<Patient> getFilteredPatientList() {
+            return filteredPatients;
         }
 
         @Override

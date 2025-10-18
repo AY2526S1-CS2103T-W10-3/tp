@@ -15,13 +15,13 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_NRIC;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PATIENT;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.DeleteAppointmentCommand;
-import seedu.address.model.person.Nric;
+import seedu.address.model.patient.Nric;
 
 public class DeleteAppointmentCommandParserTest {
 
@@ -30,7 +30,7 @@ public class DeleteAppointmentCommandParserTest {
     @Test
     public void parse_allFieldsPresent_success() {
         assertParseSuccess(parser, NRIC_DESC_AMY + INDEX_DESC_FIRST,
-                new DeleteAppointmentCommand(VALID_NRIC_AMY, INDEX_FIRST_PERSON));
+                new DeleteAppointmentCommand(VALID_NRIC_AMY, INDEX_FIRST_PATIENT));
     }
 
     @Test
@@ -76,7 +76,7 @@ public class DeleteAppointmentCommandParserTest {
         assertParseFailure(parser, VALID_NRIC_BOB + INDEX_DESC_FIRST, expectedMessage);
 
         // missing index prefix
-        assertParseFailure(parser, NRIC_DESC_BOB + INDEX_FIRST_PERSON, expectedMessage);
+        assertParseFailure(parser, NRIC_DESC_BOB + INDEX_FIRST_PATIENT, expectedMessage);
     }
 
     @Test
