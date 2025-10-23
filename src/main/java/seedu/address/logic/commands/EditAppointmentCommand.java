@@ -9,6 +9,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_NRIC;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import seedu.address.commons.core.index.Index;
@@ -43,6 +44,8 @@ public class EditAppointmentCommand extends Command {
     public static final String MESSAGE_NOT_VIEWING_APPOINTMENT = "Command only works when displaying appointments.\n"
             + "Use the following command first: list-appt";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
+    public static final String MESSAGE_APPOINTMENT_TIME_CLASH =
+            "The appointment has a clashing timing with another appointment.";
 
 
     private final Index index;
@@ -77,6 +80,17 @@ public class EditAppointmentCommand extends Command {
 
         Appointment appointmentToEdit = updatedAppointments.get(index.getZeroBased());
         Appointment editedAppointment = createEditedAppointment(appointmentToEdit, editAppointmentDescriptor);
+
+        // Check for any duplicate timings
+        List<Patient> lastShownList = model.getFilteredPatientList();
+        ArrayList<Appointment> allAppointments = new ArrayList<>();
+        for (int i = 0; i < lastShownList.size(); i++) {
+            allAppointments.addAll(lastShownList.get(i).getAppointments());
+        }
+        if (allAppointments.stream().anyMatch(x -> x.clashTime(editedAppointment)
+                && !x.equals(appointmentToEdit))) {
+            throw new CommandException(MESSAGE_APPOINTMENT_TIME_CLASH);
+        }
 
         updatedAppointments.set(index.getZeroBased(), editedAppointment);
 

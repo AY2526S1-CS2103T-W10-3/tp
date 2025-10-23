@@ -72,6 +72,13 @@ public class Appointment {
         return title.equals(otherAppointment.title) && dateTime.equals(otherAppointment.dateTime);
     }
 
+    /**
+     * Returns true if both appointments have the same dateTime
+     */
+    public boolean clashTime(Appointment other) {
+        return dateTime.equals(other.dateTime);
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(title, dateTime);

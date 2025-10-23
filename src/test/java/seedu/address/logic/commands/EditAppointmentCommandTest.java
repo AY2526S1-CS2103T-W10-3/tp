@@ -1,5 +1,6 @@
 package seedu.address.logic.commands;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
@@ -11,6 +12,9 @@ import static seedu.address.testutil.TypicalPatients.getTypicalAddressBook;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.commons.core.index.Index;
+import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.EditAppointmentCommand.EditAppointmentDescriptor;
 import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
@@ -156,4 +160,84 @@ public class EditAppointmentCommandTest {
         EditAppointmentCommand cmd4 = new EditAppointmentCommand(INDEX_FIRST_APPOINTMENT, desc);
         assertTrue(command.equals(cmd4));
     }
+
+    @Test
+    public void invalidIndexTest_fail() {
+        model.setSelectedPatient(BENSON);
+        Index invalid = Index.fromZeroBased(model.getSelectedPatient().getAppointments().size());
+        Appointment editedAppointment = new AppointmentBuilder().withTitle("new disease")
+                .withDateTime("07-10-2025, 1530").build();
+        EditAppointmentDescriptor descriptor = new EditAppointmentDescriptorBuilder(editedAppointment).build();
+        EditAppointmentCommand editAppointmentCommand = new EditAppointmentCommand(invalid, descriptor);
+
+        assertCommandFailure(editAppointmentCommand, model, Messages.MESSAGE_INVALID_PATIENT_DISPLAYED_INDEX);
+    }
+
+    @Test
+    public void duplicateTimingTest_fail() {
+        model.setSelectedPatient(BENSON);
+        // change both title and dateTime
+        Appointment editedAppointment = new AppointmentBuilder().withTitle("new disease")
+                .withDateTime("07-10-2025, 1530").build();
+        EditAppointmentDescriptor descriptor = new EditAppointmentDescriptorBuilder(editedAppointment).build();
+        EditAppointmentCommand editAppointmentCommand = new EditAppointmentCommand(INDEX_FIRST_APPOINTMENT, descriptor);
+
+        assertCommandFailure(editAppointmentCommand, model, EditAppointmentCommand.MESSAGE_APPOINTMENT_TIME_CLASH);
+    }
+
+    @Test
+    public void duplicateTimingSameAppointmentTest_success() {
+        model.setSelectedPatient(BENSON);
+
+        // only change dateTime
+        Appointment editedAppointment = new AppointmentBuilder()
+                .withTitle("test title").build();
+        EditAppointmentDescriptor descriptor = new EditAppointmentDescriptorBuilder(editedAppointment).build();
+        EditAppointmentCommand editAppointmentCommand = new EditAppointmentCommand(INDEX_FIRST_APPOINTMENT, descriptor);
+        Patient newPatient = new Patient(BENSON.getName(),
+                BENSON.getNric(),
+                BENSON.getGender(),
+                BENSON.getPhone(),
+                BENSON.getEmail(),
+                BENSON.getDob(),
+                BENSON.getAddress(),
+                BENSON.getTags(),
+                BENSON.getAppointments());
+
+        String expectedMessage = String.format(
+                EditAppointmentCommand.MESSAGE_SUCCESS,
+                editedAppointment
+        );
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+        expectedModel.setPatient(model.getFilteredPatientList().get(1), newPatient);
+
+        assertCommandSuccess(editAppointmentCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void toStringTest() {
+        model.setSelectedPatient(BENSON);
+
+        Appointment editedAppointment = new AppointmentBuilder().withTitle("new disease")
+                .withDateTime("20-02-2002, 0900").build();
+        EditAppointmentDescriptor descriptor = new EditAppointmentDescriptorBuilder(editedAppointment).build();
+        EditAppointmentCommand editAppointmentCommand = new EditAppointmentCommand(INDEX_FIRST_APPOINTMENT, descriptor);
+        Patient newPatient = new Patient(BENSON.getName(),
+                BENSON.getNric(),
+                BENSON.getGender(),
+                BENSON.getPhone(),
+                BENSON.getEmail(),
+                BENSON.getDob(),
+                BENSON.getAddress(),
+                BENSON.getTags(),
+                BENSON.getAppointments());
+
+        String expectedString = new ToStringBuilder(editAppointmentCommand)
+                .add("index", INDEX_FIRST_APPOINTMENT)
+                .add("editPatientDescriptor", descriptor)
+                .toString();
+        assertEquals(expectedString, editAppointmentCommand.toString());
+    }
+
 }

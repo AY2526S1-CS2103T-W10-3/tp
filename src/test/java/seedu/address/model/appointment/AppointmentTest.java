@@ -67,6 +67,25 @@ public class AppointmentTest {
     }
 
     @Test
+    public void clashTimeTest() {
+        Title title = new Title("Dentist Appointment");
+        LocalDateTime date = LocalDateTime.of(2025, 10, 7, 14, 30);
+
+        Appointment a = new Appointment(title, date);
+        Appointment sameValues = new Appointment(
+                new Title("Dentist Appointment"),
+                LocalDateTime.of(2025, 10, 7, 14, 30)
+        );
+        Appointment differentTitle = new Appointment(new Title("Doctor Visit"), date);
+        Appointment differentTime = new Appointment(title,
+                LocalDateTime.of(2025, 10, 17, 14, 30));
+
+        assertTrue(a.clashTime(sameValues));
+        assertTrue(a.clashTime(differentTitle));
+        assertFalse(a.clashTime(differentTime));
+    }
+
+    @Test
     public void toStringMethod() {
         Title title = new Title("Dentist Appointment");
         LocalDateTime date = LocalDateTime.of(2025, 10, 7, 14, 30);

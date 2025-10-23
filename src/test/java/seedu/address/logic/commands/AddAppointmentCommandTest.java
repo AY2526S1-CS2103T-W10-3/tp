@@ -3,6 +3,7 @@ package seedu.address.logic.commands;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_TITLE_DENTAL;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.Assert.assertThrows;
@@ -17,6 +18,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javafx.collections.ObservableList;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.model.Model;
@@ -32,6 +34,8 @@ import seedu.address.testutil.AppointmentBuilder;
  */
 public class AddAppointmentCommandTest {
     private static final Appointment VALID_APPOINTMENT = new AppointmentBuilder().build();
+    private static final String MESSAGE_APPOINTMENT_TIME_CLASH =
+            "The appointment has a clashing timing with another appointment.";
 
     private Model model;
 
@@ -47,6 +51,57 @@ public class AddAppointmentCommandTest {
                 null, new Appointment(new Title("A"), LocalDateTime.now())));
         assertThrows(NullPointerException.class, () -> new AddAppointmentCommand(
                 Index.fromOneBased(1), null));
+    }
+
+    @Test
+    public void duplicateTimingTestDifferentTitleSameTime_fail() {
+        ObservableList<Patient> patientList = model.getFilteredPatientList();
+        ArrayList<Appointment> allAppointments = new ArrayList<>();
+        for (int i = 0; i < patientList.size(); i++) {
+            Index idx = Index.fromZeroBased(i);
+            allAppointments.addAll(patientList.get(idx.getZeroBased()).getAppointments());
+        }
+
+        Appointment clashTime = new AppointmentBuilder()
+                .withTitle(VALID_TITLE_DENTAL)
+                .withDateTime("07-10-2025, 1430").build();
+
+        AddAppointmentCommand command1 = new AddAppointmentCommand(INDEX_FIRST_PATIENT, clashTime);
+        assertCommandFailure(command1, model, MESSAGE_APPOINTMENT_TIME_CLASH);
+    }
+
+    @Test
+    public void duplicateTimingTestSameTitleNoClash_success() {
+        ObservableList<Patient> patientList = model.getFilteredPatientList();
+        ArrayList<Appointment> allAppointments = new ArrayList<>();
+        for (int i = 0; i < patientList.size(); i++) {
+            Index idx = Index.fromZeroBased(i);
+            allAppointments.addAll(patientList.get(idx.getZeroBased()).getAppointments());
+        }
+
+        Appointment sameTitleNoClash = new AppointmentBuilder()
+                .withTitle("Dentist Appointment")
+                .withDateTime("07-10-2025, 1730").build();
+
+        Patient patient = model.getFilteredPatientList().get(INDEX_FIRST_PATIENT.getZeroBased());
+        ArrayList<Appointment> updatedAppointments = new ArrayList<>(Stream.concat(patient.getAppointments().stream(),
+                Stream.of(sameTitleNoClash)).toList());
+        Patient editedPatient = new Patient(patient.getName(), patient.getNric(), patient.getGender(),
+                patient.getPhone(), patient.getEmail(), patient.getDob(), patient.getAddress(), patient.getTags(),
+                updatedAppointments);
+
+        String expectedMessage = String.format(
+                AddAppointmentCommand.MESSAGE_SUCCESS,
+                Messages.format(editedPatient),
+                sameTitleNoClash
+        );
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.setPatient(expectedModel.getFilteredPatientList().get(INDEX_FIRST_PATIENT.getZeroBased()),
+                editedPatient);
+
+        AddAppointmentCommand command2 = new AddAppointmentCommand(INDEX_FIRST_PATIENT, sameTitleNoClash);
+        assertCommandSuccess(command2, model, expectedMessage, expectedModel);
     }
 
     @Test

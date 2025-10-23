@@ -52,7 +52,8 @@ public class TypicalPatients {
                 new Appointment(
                         new Title("Dentist Appointment"),
                         LocalDateTime.of(2025, 10, 7, 14, 30)
-                )
+                ), new Appointment(new Title("Flu jab"),
+                            LocalDateTime.of(2025, 10, 7, 15, 30))
             ))).build();
     public static final Patient CARL = new PatientBuilder().withName("Carl Kurz")
             .withNric("T1257515C")
