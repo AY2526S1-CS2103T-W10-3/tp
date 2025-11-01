@@ -12,7 +12,7 @@ public class ListAppointmentUpcomingCommand extends Command {
     public static final String COMMAND_WORD = "list-appt-upcoming";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Lists upcoming appointments of all patients in the address book.\n"
+            + ": Lists upcoming appointments of all patients in DoctorBase.\n"
             + "Example: " + COMMAND_WORD;
 
     public static final String MESSAGE_SUCCESS = "Listed all upcoming appointments";

@@ -27,7 +27,7 @@ public class DeleteAppointmentCommand extends Command {
 
     public static final String MESSAGE_DELETE_APPOINTMENT_SUCCESS = "Appointment for %1$s: %2$s deleted";
     public static final String MESSAGE_APPOINTMENT_NOT_FOUND = "No apppointment at index %1$s "
-            + "exists in the address book";
+            + "exists in DoctorBase";
 
     private final Index targetIndex;
 

@@ -494,20 +494,131 @@ testers are expected to do more *exploratory* testing.
    1. Re-launch the app by double-clicking the jar file.<br>
        Expected: The most recent window size and location is retained.
 
+### Finding a patient
+
+1. Finding a patient while all patients are being shown.
+
+   1. Prerequisites: None.
+
+   1. Test case: `find alex`  
+      Expected: Shows patients that include `alex` in their `NAME`.
+
 ### Deleting a patient
 
-1. Deleting a patient while all patients are being shown
+1. Deleting a patient while all patients are being shown.
 
    1. Prerequisites: List all patients using the `list` command. Multiple patients in the list.
 
    1. Test case: `delete 1`  
-      Expected: First patient is deleted from the list. Details of the deleted patient shown in the status message. Timestamp in the status bar is updated.
+      Expected: First patient is deleted from the list. Details of the deleted patient shown in the status message.
 
    1. Test case: `delete 0`  
-      Expected: No patient is deleted. Error details shown in the status message. Status bar remains the same.
+      Expected: No patient is deleted. Error details shown in the status message.
 
    1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)  
       Expected: Similar to previous.
+
+### Adding a patient
+
+1. Adding a patient while all patients are being shown
+
+   1. Prerequisites: List all patients using the `list` command.
+
+   1. Test case: `add n/John Doe i/S8052802G g/m p/98765432 e/johnd@example.com d/12-12-2002 a/John street, block 123, #01-01`  
+      Expected: New patient added. Details of the added patient shown in the status message.
+
+   1. Test case (missing `GENDER`): `add n/John Doe i/S8052802G p/98765432 e/johnd@example.com d/12-12-2002 a/John street, block 123, #01-01`  
+      Expected: No patient added. Error details shown in status message.
+      
+   1. Test case (invalid `NRIC`): `add n/John Doe i/A8052802G g/m p/98765432 e/johnd@example.com d/12-12-2002 a/John street, block 123, #01-01`  
+      Excepted: No patient added. Error details shown in status message.
+
+### Editing a patient
+
+1. Editing a patient while all patients are being shown.
+
+   1. Prerequisites: List all patients using the `list` command. At least 1 patient in the list.
+
+   1. Test case: `edit 1 p/91234567 e/johndoe@example.com`  
+      Expected: First patient edited. Details of edited patient shown in the status message
+
+   1. Test case: `edit 1`  
+      Expected: No patient edited. Error details shown in status message.
+
+   1. Test case (duplicate `NRIC`): `edit 1 i/S7101271I`  
+      Expected: No patient added. Error details shown in status message.
+
+### Listing all patients
+
+1. Listing all patients from appointment list
+
+   1. Prerequisite: List all appointments of the 1st patient using the `list-appt 1` command. At least 1 patient in list
+
+   1. Test case: `list`  
+      Expected: Listed all patients
+
+   1. Test case: `list aewawsd`
+      Expected: Listed all patients
+
+### Adding an appointment
+
+1. Adding an appointment to the first patient's appointment list.
+
+   1. Prerequisite: List all patients using the `list` command. At least 1 patient in list. There is no existing appointment with the same appointment timing.
+
+   1. Test case: `add-appt 2 at/flu jab ad/27-02-2025, 0900`  
+      Expected: New appointment added. Details of the edited patient shown in the status message.
+
+   1. Test case: `add-appt 2 at/flu jab ad/30-02-2025, 0900`  
+      Expected: No appointment added. Error details shown in status message.
+
+### Editing an appointment
+
+1. Editing an appointment of the first patient's appointment list.
+
+   1. Prerequisite: List all appointments of first patient using the `list-appt 1` command. At least 1 patient in list. There is no existing appointment with the same appointment timing. At least 1 appointment in appointment list.
+
+   1. Test case: `edit-appt 1 at/dental ad/02-02-2002, 0900`  
+      Expected: First appointment of first patient edited. Details of edited patient shown in the status message
+
+   1. Test case: `edit-appt 1`  
+      Expected: No appointment edited. Error details shown in status message.
+
+### Deleting an appointment
+
+1. Deleting an appointment of the first patient's appointment list.
+
+   1. Prerequisite: List all appointments of first patient using the `list-appt 1` command. At least 1 patient in list. At least 1 appointment in appointment list
+
+   1. Test case: `delete-appt 1`  
+      Expected: First appointment of first patient delete. Details of edited patient shown in the status message.
+
+   1. Test case: `delete-appt 0`  
+      Expected: No appointment deleted. Error details shown in status message.
+
+### Listing all appointments
+
+1. Listing all appointments of first patient.
+
+   1. Prerequisite: List all patients using the `list` command. At least 1 patient in list.
+
+   1. Test case: `list-appt 1`  
+      Expected: First patient's appointment list shown. Listed all appointments for first patient.
+
+   1. Test case: `list-appt 0`  
+      Expected: No appointment list shown. Error details shown in status message.
+
+### Listing all upcoming appointments
+
+1. Listing all upcoming appointments
+
+   1. Prerequisite: None.
+
+   1. Test case: `list-appt-upcoming`  
+      Expected: All upcoming appointments shown. Listed all upcoming appointments.
+
+   1. Test case: `list-appt-upcoming 123123123`  
+      Expected: All upcoming appointments shown. Listed all upcoming appointments.
 
 ### Saving data
 
@@ -568,3 +679,44 @@ testers are expected to do more *exploratory* testing.
    In `list-appt` and `list-appt-upcoming` view, users cannot search for appointments by any of the field.  
    The enhancement would allow users to find specific appointments by name or by date.
 
+--------------------------------------------------------------------------------------------------------------------
+
+## **Appendix: Effort**
+
+Given below are how we expanded upon AB3 to fit our users (solo doctors)
+
+### Fields of Patient
+The Patient class (refactored from Person) had basic field of a typical person, however, it did not have some of the fields we would expect to be stored in a patient's info  
+such as:
+* Date of birth
+* Gender
+* Medical history
+
+Hence, the missing `DateOfBirth` and `Gender` classes has to be made from scratch, with reference from the existing AB3 fields (Name, Email, etc.)  
+
+While this was manageable, it required us to have an understanding of how the fields functioned and interacted with the rest of the system.  
+
+Whereas for `MedicalHistory`, we were able to refactor the existing `Tag` field in order for it to more properly fit our desired project scope.  
+
+### Appointment model
+Appointments are things that every patient would have, and would also be something that would happen at a specified date and time, to achieve an event, such as an injection.  
+However, having these inner fields would mean that the appointments would need to be implemented as a new model, with the date and time of the appointment, and the event happening at the appointment, as its fields.  
+
+The Appointment model had to be built from scratch, including the fields:
+* Title
+* DateTime
+
+The Appointment class also had to be integrated as a field of Patient, as to fit the project scope.
+
+### Appointment commands
+With a new model, there would be new commands tied to it as well  
+Hence, `add-appt`, `edit-appt`, `delete-appt` and `list-appt` were implemented.  
+
+To implement these command, we were able to reference the existing `add`, `edit`, `delete` and `list` commands.  
+However, there were also some caveats such as the selection of the patient to be operated on, requiring changes in core underlying classes such as `LogicManager` and `ModelManager` to implement a `selectedPatient` field and methods such as `getSelectedPatient()`.  
+
+### View model handling
+With the new commands with realistic restrictions such as `edit-appt` requiring the UI to be viewing a patient's appointment list, checks based on what the UI was viewing had to be implemented.  
+
+Hence, a `ViewMode` enum class had to built and implemented into `ModelManager` in order to track what the user is currently viewing.  
+With this, we were able to properly restrict the usage of certain commands to their required `ViewMode`.  

@@ -24,7 +24,7 @@ public class AddAppointmentCommand extends Command {
 
     public static final String COMMAND_WORD = "add-appt";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds an appointment to the address book.\n"
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds an appointment to DoctorBase.\n"
             + "Parameters: INDEX (must be a positive integer) "
             + PREFIX_APPOINTMENT_TITLE + "TITLE "
             + PREFIX_APPOINTMENT_DATETIME + "DATE_TIME (dd-MM-yyyy, HHmm)\n"
